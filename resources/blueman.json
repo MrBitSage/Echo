@@ -1,0 +1,101 @@
+[{
+	"filename": "blueman_default-0.png",
+	"frame": {"x":0,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": true
+},{
+	"filename": "blueman_right-1.png",
+	"frame": {"x":0,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "blueman_right-2.png",
+	"frame": {"x":15,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "blueman_right-3.png",
+	"frame": {"x":30,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "blueman_right-4.png",
+	"frame": {"x":45,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "blueman_right-5.png",
+	"frame": {"x":60,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "blueman_right-6.png",
+	"frame": {"x":75,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "blueman_right-7.png",
+	"frame": {"x":90,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "blueman_right-8.png",
+	"frame": {"x":105,"y":0,"w":15,"h":35},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "blueman_left-1.png",
+	"frame": {"x":0,"y":0,"w":15,"h":35},
+	"flipped": true,
+	"default": false
+},
+{
+	"filename": "blueman_left-2.png",
+	"frame": {"x":15,"y":0,"w":15,"h":35},
+	"flipped": true,
+	"default": false
+},
+{
+	"filename": "blueman_left-3.png",
+	"frame": {"x":30,"y":0,"w":15,"h":35},
+	"flipped": true,
+	"default": false
+},
+{
+	"filename": "blueman_left-4.png",
+	"frame": {"x":45,"y":0,"w":15,"h":35},
+	"flipped": true,
+	"default": false
+},
+{
+	"filename": "blueman_left-5.png",
+	"frame": {"x":60,"y":0,"w":15,"h":35},
+	"flipped": true,
+	"default": false
+},
+{
+	"filename": "blueman_left-6.png",
+	"frame": {"x":75,"y":0,"w":15,"h":35},
+	"flipped": true,
+	"default": false
+},
+{
+	"filename": "blueman_left-7.png",
+	"frame": {"x":90,"y":0,"w":15,"h":35},
+	"flipped": true,
+	"default": false
+},
+{
+	"filename": "blueman_left-8.png",
+	"frame": {"x":105,"y":0,"w":15,"h":35},
+	"flipped": true,
+	"default": false
+}]
