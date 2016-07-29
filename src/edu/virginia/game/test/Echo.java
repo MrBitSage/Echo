@@ -1,6 +1,8 @@
 package edu.virginia.game.test;
 
 import edu.virginia.engine.display.*;
+import edu.virginia.engine.events.*;
+import edu.virginia.engine.events.Event;
 import edu.virginia.engine.util.GameClock;
 
 import java.awt.*;
@@ -10,9 +12,10 @@ import java.util.ArrayList;
 /**
  * Created by Jason.
  */
-public class Echo extends DisplayObjectContainer {
+public class Echo extends DisplayObjectContainer implements IEventListener {
 
-    public static final String FILE_NAME = "echo_default-1.png";
+    public static final String ECHO_EVENT = "Echo";
+    private static final String FILE_NAME = "echo_default-1.png";
 
     int numRings;
     double radius;
@@ -39,7 +42,7 @@ public class Echo extends DisplayObjectContainer {
 
         for (int i = 0; i < numRings; i++) {
             Sprite ring = new Sprite("Ring-" + i, ringImage);
-            ring.setPivotPoint(new Point(ring.getUnscaledWidth()/2, ring.getUnscaledHeight()/2));
+            ring.setPivotPoint(new Point(ring.getUnscaledWidth() / 2, ring.getUnscaledHeight() / 2));
             ring.setAlpha(0);
             this.addChild(ring);
             rings.add(ring);
@@ -73,4 +76,11 @@ public class Echo extends DisplayObjectContainer {
         return firstRun || (timer != null && timer.getElapsedTime() > (numRings - 1) * spawnDelay + duration);
     }
 
+    @Override
+    public void handleEvent(Event event) {
+        if (event.getEventType().equals(ECHO_EVENT) && this.echoReady()) {
+            EchoEvent ev = (EchoEvent) event;
+            this.echo(ev.getX(), ev.getY());
+        }
+    }
 }

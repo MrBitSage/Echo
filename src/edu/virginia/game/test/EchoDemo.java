@@ -39,7 +39,8 @@ public class EchoDemo extends Game {
         sprite.getPosition().translate(0, 200);
         this.addChild(sprite);
 
-        testEcho = new Echo("Echo", 5, 200, 1200, 300, TweenTransitions.Functions.SINE_I_O);
+        testEcho = new Echo("Echo", 10, 200, 1500, 300, TweenTransitions.Functions.SINE_I_O);
+        this.addEventListener(testEcho, Echo.ECHO_EVENT);
         echoes.addChild(testEcho);
 
         tic = new GameClock();
@@ -65,7 +66,7 @@ public class EchoDemo extends Game {
                 sprite.animate("default");
             }
             if (Math.abs(sprite.getPosition().getX() - 400) < 20 && testEcho.echoReady()) {
-                testEcho.echo(500, 300);
+                this.dispatchEvent(new EchoEvent(Echo.ECHO_EVENT, this, 500, 300));
             }
             tic.resetGameClock();
         }
