@@ -100,13 +100,24 @@ public class DisplayObjectContainer extends DisplayObject {
     }
 
     public void clearChildren() {
-        for (DisplayObject child : children) {
-            child.setParent(null);
-        }
+        children.forEach(child -> child.setParent(null));
         children.clear();
     }
 
     public boolean contains(DisplayObject child) {
         return children.contains(child);
+    }
+
+    @Override
+    public boolean collidesWith(DisplayObject object) {
+        if (!super.collidesWith(object)) {
+            for (DisplayObject child : children) {
+                if (child.collidesWith(object)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 }

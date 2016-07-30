@@ -1,5 +1,6 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.events.CollisionEvent;
 import edu.virginia.engine.events.EventDispatcher;
 import edu.virginia.engine.util.GameClock;
 
@@ -197,7 +198,7 @@ public class DisplayObject extends EventDispatcher {
 
     public float getAlphaTransform() {
         if (parent != null) {
-            return getParent().getAlphaTransform()*getAlpha();
+            return getParent().getAlphaTransform() * getAlpha();
         } else {
             return getAlpha();
         }
@@ -206,7 +207,7 @@ public class DisplayObject extends EventDispatcher {
     public float getAlphaReverseTransform() {
         if (parent != null) {
             if (getAlpha() != 0) {
-                return getParent().getAlphaReverseTransform()/getAlpha();
+                return getParent().getAlphaReverseTransform() / getAlpha();
             } else {
                 return getParent().getAlphaReverseTransform();
             }
@@ -247,6 +248,8 @@ public class DisplayObject extends EventDispatcher {
         if (displayImage != null && isVisible()) {
             // Get the graphics and apply this objects transformations (rotation, etc.)
             Graphics2D g2d = (Graphics2D) g;
+            Rectangle r = getHitbox();
+            g2d.drawRect(r.x, r.y, r.width, r.height);
             applyTransformations(g2d);
 
             // Draw
@@ -319,11 +322,19 @@ public class DisplayObject extends EventDispatcher {
         }
     }
 
-    public BoundingBox getHitbox() {
-        Rectangle rect = new Rectangle(getPosition().x - getPivotPoint().x, getPosition().y - getPivotPoint().y,
-                (int) (getUnscaledWidth() * getScaleX()), (int) (getUnscaledHeight() * getScaleY()));
+    public Rectangle getHitbox() {
+        int x = (int) (-pivotPoint.x * scaleX);
+        int y = (int) (-pivotPoint.y * scaleY);
+        Point origin = localToGlobal(new Point(x, y));
+        return new Rectangle(origin.x, origin.y, (int) (getUnscaledWidth() * scaleX), (int) (getUnscaledHeight() * scaleY));
+    }
 
-        return null;
+    public boolean collidesWith(DisplayObject object) {
+        if (this.getHitbox().intersects(object.getHitbox())) {
+            this.dispatchEvent(new CollisionEvent(CollisionEvent.COLLISION_EVENT, this, object));
+            return true;
+        }
+        return false;
     }
 
     public Point rotate(Point p, double theta) {

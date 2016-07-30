@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Jason on 7/14/2016.
+ * Created by Jason.
  */
 public class AnimatedSprite extends Sprite {
 
@@ -54,7 +54,7 @@ public class AnimatedSprite extends Sprite {
             int y = dimm.get("y").intValue();
             int w = dimm.get("w").intValue();
             int h = dimm.get("h").intValue();
-            BufferedImage frameImage = spriteImage.getSubimage((int) x, y, w, h);
+            BufferedImage frameImage = spriteImage.getSubimage(x, y, w, h);
             if ((boolean) frame.get("default")) {
                 this.defaultImage = frameImage;
                 this.setImage(frameImage);

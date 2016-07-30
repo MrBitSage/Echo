@@ -5,7 +5,7 @@ import edu.virginia.engine.display.*;
 import java.util.ArrayList;
 
 /**
- * Created by Jason on 7/26/2016.
+ * Created by Jason.
  */
 public class TweenTesting extends Game {
 
@@ -29,9 +29,12 @@ public class TweenTesting extends Game {
         if (pressedKeys.contains("T") && firstOccurence && juggler != null) {
             TweenChain t = new TweenChain(mario);
             t.animate(TweenableParams.SCALE_X, TweenTransitions.Functions.SINE_I_O, 2, 500);
-            t.animate(TweenableParams.SCALE_Y, TweenTransitions.Functions.SINE_I_O, 2, 500);
+            t.addLink(1);
+            t.animate(TweenableParams.SCALE_Y, TweenTransitions.Functions.CUBIC_I, 2, 500);
             t.addLink(2);
-            t.animate(TweenableParams.X, TweenTransitions.Functions.SINE_I_O, 200, 1000);
+            t.animate(TweenableParams.X, TweenTransitions.Functions.MUSTAFA, 200, 1000);
+            t.animate(TweenableParams.ROTATION, TweenTransitions.Functions.SINE_I_O, Math.toRadians(720), 1000);
+            t.addLink(3);
             t.animate(TweenableParams.ALPHA, TweenTransitions.Functions.CUBIC_O, 0, 750);
             juggler.add(t);
             firstOccurence = false;

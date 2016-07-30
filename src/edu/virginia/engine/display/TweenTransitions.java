@@ -9,7 +9,8 @@ public class TweenTransitions {
         CUBIC_I,
         CUBIC_O,
         CUBIC_I_O,
-        SINE_I_O
+        SINE_I_O,
+        MUSTAFA
     }
 
     public static double applyTransition(double percentDone, Functions easingFunction) {
@@ -22,6 +23,8 @@ public class TweenTransitions {
                 return cubicInOutTransition(percentDone);
             case SINE_I_O:
                 return sineInOutTransition(percentDone);
+            case MUSTAFA:
+                return sineInOutMustafaTransition(percentDone);
         }
         return percentDone;
     }
@@ -40,5 +43,9 @@ public class TweenTransitions {
 
     private static double sineInOutTransition(double percentDone) {
         return Math.sin(Math.PI * (percentDone - 0.5)) / 2 + 0.5;
+    }
+
+    private static double sineInOutMustafaTransition(double percentDone) {
+        return Math.sin(Math.PI * 5 * (percentDone - 0.5)) / 2 + 0.5;
     }
 }

@@ -1,6 +1,9 @@
 package edu.virginia.game.test;
 
 import edu.virginia.engine.display.*;
+import edu.virginia.engine.events.CollisionEvent;
+import edu.virginia.engine.events.Event;
+import edu.virginia.engine.events.IEventListener;
 import edu.virginia.engine.util.GameClock;
 
 import java.io.FileNotFoundException;
@@ -9,12 +12,15 @@ import java.util.ArrayList;
 /**
  * Created by Jason.
  */
-public class EchoDemo extends Game {
+public class EchoDemo extends Game implements IEventListener{
 
     DisplayObjectContainer background;
     DisplayObjectContainer echoes;
     DisplayObjectContainer level;
+
     AnimatedSprite sprite;
+
+    Sprite coin;
 
     GameClock tic;
 
@@ -25,7 +31,7 @@ public class EchoDemo extends Game {
     public EchoDemo(String gameId, int width, int height) throws FileNotFoundException {
         super(gameId, width, height);
 
-        background = new DisplayObjectContainer("BackGround", "background.png");
+        background = new DisplayObjectContainer("BackGround");
         echoes = new DisplayObjectContainer("Echoes");
         level = new DisplayObjectContainer("Level");
 
@@ -33,13 +39,17 @@ public class EchoDemo extends Game {
         this.addChild(echoes);
         this.addChild(level);
 
-        sprite = new AnimatedSprite("Sprite Demo", "blueman", 12);
+        sprite = new AnimatedSprite("Sprite Demo", "blue", 12);
         sprite.setScaleX(5);
         sprite.setScaleY(5);
         sprite.getPosition().translate(0, 200);
+        sprite.addEventListener(this, CollisionEvent.COLLISION_EVENT);
         this.addChild(sprite);
 
-        testEcho = new Echo("Echo", 10, 200, 1500, 300, TweenTransitions.Functions.SINE_I_O);
+        coin = new Sprite("Coin", "coin.png");
+        level.addChild(coin);
+
+        testEcho = new Echo("Echo", 3, 250, 6000, 1000, TweenTransitions.Functions.MUSTAFA);
         this.addEventListener(testEcho, Echo.ECHO_EVENT);
         echoes.addChild(testEcho);
 
@@ -68,6 +78,7 @@ public class EchoDemo extends Game {
             if (Math.abs(sprite.getPosition().getX() - 400) < 20 && testEcho.echoReady()) {
                 this.dispatchEvent(new EchoEvent(Echo.ECHO_EVENT, this, 500, 300));
             }
+            sprite.collidesWith(echoes);
             tic.resetGameClock();
         }
         if (juggler != null) {
@@ -78,5 +89,13 @@ public class EchoDemo extends Game {
     public static void main(String[] args) throws FileNotFoundException {
         EchoDemo game = new EchoDemo("Echo Demo", 800, 600);
         game.start();
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+        if (event.getEventType().endsWith(CollisionEvent.COLLISION_EVENT)) {
+            CollisionEvent ce = (CollisionEvent) event;
+            System.out.println(ce.getCollidedObject().getId());
+        }
     }
 }

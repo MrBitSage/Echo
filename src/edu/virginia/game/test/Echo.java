@@ -64,9 +64,9 @@ public class Echo extends DisplayObjectContainer implements IEventListener {
             TweenChain animation = new TweenChain(ring);
             animation.animate(TweenableParams.NA, TweenTransitions.Functions.SINE_I_O, 1, spawnDelay * rings.indexOf(ring));
             animation.addLink(1);
-            animation.animate(TweenableParams.SCALE_X, TweenTransitions.Functions.SINE_I_O, 2 * radius / ring.getUnscaledWidth(), duration);
-            animation.animate(TweenableParams.SCALE_Y, TweenTransitions.Functions.SINE_I_O, 2 * radius / ring.getUnscaledHeight(), duration);
-            animation.animate(TweenableParams.ALPHA, TweenTransitions.Functions.SINE_I_O, 0, duration);
+            animation.animate(TweenableParams.SCALE_X, easeFunction, 2 * radius / ring.getUnscaledWidth(), duration);
+            animation.animate(TweenableParams.SCALE_Y, easeFunction, 2 * radius / ring.getUnscaledHeight(), duration);
+            animation.animate(TweenableParams.ALPHA, easeFunction, 0, duration);
             TweenJuggler.getInstance().add(animation);
         }
         timer.resetGameClock();
