@@ -11,7 +11,7 @@ public class CollisionEvent extends Event {
 
     DisplayObject collidedObject;
 
-    public CollisionEvent(String eventType, IEventDispatcher source, DisplayObject collidedObject) {
+    public CollisionEvent(String eventType, DisplayObject source, DisplayObject collidedObject) {
         super(eventType, source);
         this.collidedObject = collidedObject;
     }

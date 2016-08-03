@@ -2,7 +2,6 @@ package edu.virginia.engine.display;
 
 import edu.virginia.engine.events.CollisionEvent;
 import edu.virginia.engine.events.EventDispatcher;
-import edu.virginia.engine.util.GameClock;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -27,6 +26,7 @@ public class DisplayObject extends EventDispatcher {
 
     private boolean visible;
     private boolean visibilityToggled;
+    private Point previousPosition;
     private Point position;
     private Point pivotPoint;
     private double scaleX;
@@ -34,7 +34,7 @@ public class DisplayObject extends EventDispatcher {
     private double rotation;
     private float alpha;
 
-    private GameClock deltaT = new GameClock();
+    protected ArrayList<DisplayObject> collidables;
 
     /**
      * Constructors: can pass in the id OR the id and image's file path and
@@ -62,12 +62,14 @@ public class DisplayObject extends EventDispatcher {
     private void init() {
         parent = null;
         visible = true;
+        previousPosition = new Point(0, 0);
         position = new Point(0, 0);
         pivotPoint = new Point(0, 0);
-        scaleX = 1;
-        scaleY = 1;
+        scaleX = 1.0;
+        scaleY = 1.0;
         rotation = 0;
         alpha = 1;
+        collidables = new ArrayList<>();
     }
 
     public DisplayObject getParent() {
@@ -157,7 +159,16 @@ public class DisplayObject extends EventDispatcher {
     }
 
     public void setPosition(Point position) {
+        this.previousPosition = new Point(this.position);
         this.position = position;
+    }
+
+    public void move(double x, double y) {
+        this.setPosition(new Point((int) (position.x + x), (int) (position.y + y)));
+    }
+
+    public void move(int x, int y) {
+        this.setPosition(new Point(position.x + x, position.y + y));
     }
 
     public Point getPivotPoint() {
@@ -178,6 +189,22 @@ public class DisplayObject extends EventDispatcher {
 
     public double getScaleY() {
         return scaleY;
+    }
+
+    public double getGlobalScaleX() {
+        if (getParent() == null) {
+            return this.scaleX;
+        } else {
+            return getParent().getGlobalScaleX() * this.scaleX;
+        }
+    }
+
+    public double getGlobalScaleY() {
+        if (getParent() == null) {
+            return this.scaleY;
+        } else {
+            return getParent().getGlobalScaleY() * this.scaleY;
+        }
     }
 
     public void setScaleY(double scaleY) {
@@ -220,12 +247,8 @@ public class DisplayObject extends EventDispatcher {
         this.alpha = alpha;
     }
 
-    public GameClock getDeltaT() {
-        return deltaT;
-    }
-
-    public void setDeltaT(GameClock deltaT) {
-        this.deltaT = deltaT;
+    public Point getPreviousPosition() {
+        return previousPosition;
     }
 
     /**
@@ -234,9 +257,7 @@ public class DisplayObject extends EventDispatcher {
      * to update objects appropriately.
      */
     protected void update(ArrayList<String> pressedKeys) {
-        double dT = deltaT.getElapsedTime() / 1000;
-        // Put General DisplayObject Update Code Here
-        deltaT.resetGameClock();
+        checkCollisions();
     }
 
     /**
@@ -248,12 +269,10 @@ public class DisplayObject extends EventDispatcher {
         if (displayImage != null && isVisible()) {
             // Get the graphics and apply this objects transformations (rotation, etc.)
             Graphics2D g2d = (Graphics2D) g;
-            Rectangle r = getHitbox();
-            g2d.drawRect(r.x, r.y, r.width, r.height);
             applyTransformations(g2d);
 
             // Draw
-            g2d.drawImage(displayImage, 0, 0, (int) (getUnscaledWidth()), (int) (getUnscaledHeight()), null);
+            g2d.drawImage(displayImage, 0, 0, getUnscaledWidth(), getUnscaledHeight(), null);
 
             // Undo the transformations so this doesn't affect other display objects
             reverseTransformations(g2d);
@@ -278,9 +297,9 @@ public class DisplayObject extends EventDispatcher {
         g2d.translate(-getPivotPoint().getX(), -getPivotPoint().getY());
 
         //Set Transparency
-        AlphaComposite alcom = AlphaComposite.getInstance(
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(
                 AlphaComposite.SRC_OVER, getAlphaTransform());
-        g2d.setComposite(alcom);
+        g2d.setComposite(alphaComposite);
     }
 
     /**
@@ -289,8 +308,8 @@ public class DisplayObject extends EventDispatcher {
      */
     protected void reverseTransformations(Graphics2D g2d) {
         //Set Transparency
-        AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1 / getAlphaReverseTransform());
-        g2d.setComposite(alcom);
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1 / getAlphaReverseTransform());
+        g2d.setComposite(alphaComposite);
 
         //Pivot Translation
         g2d.translate(getPivotPoint().getX(), getPivotPoint().getY());
@@ -309,8 +328,8 @@ public class DisplayObject extends EventDispatcher {
         if (getParent() == null) {
             return l;
         } else {
-            return new Point(getParent().localToGlobal(getPosition()).x + l.x,
-                    getParent().localToGlobal(getPosition()).y + l.y);
+            return new Point(getParent().localToGlobal(getPosition()).x + (int) (getGlobalScaleX() * l.x),
+                    getParent().localToGlobal(getPosition()).y + (int) (getGlobalScaleY() * l.y));
         }
     }
 
@@ -323,29 +342,45 @@ public class DisplayObject extends EventDispatcher {
     }
 
     public Rectangle getHitbox() {
-        int x = (int) (-pivotPoint.x * scaleX);
-        int y = (int) (-pivotPoint.y * scaleY);
+        int x = (int) (-pivotPoint.x * getGlobalScaleX());
+        int y = (int) (-pivotPoint.y * getGlobalScaleY());
         Point origin = localToGlobal(new Point(x, y));
-        return new Rectangle(origin.x, origin.y, (int) (getUnscaledWidth() * scaleX), (int) (getUnscaledHeight() * scaleY));
+        return new Rectangle(origin.x, origin.y, (int) (getUnscaledWidth() * getGlobalScaleX()), (int) (getUnscaledHeight() * getGlobalScaleY()));
     }
 
-    public boolean collidesWith(DisplayObject object) {
-        if (this.getHitbox().intersects(object.getHitbox())) {
-            this.dispatchEvent(new CollisionEvent(CollisionEvent.COLLISION_EVENT, this, object));
-            return true;
+    public boolean checkCollisions() {
+        boolean collided = false;
+        for (DisplayObject collidable : collidables) {
+            if (collides(collidable)) {
+                this.dispatchEvent(new CollisionEvent(CollisionEvent.COLLISION_EVENT, (PhysicsSprite) this, collidable));
+                collided = true;
+            }
         }
-        return false;
+        return collided;
     }
 
-    public Point rotate(Point p, double theta) {
-        double x = Math.cos(theta - Math.atan(p.getY() / p.getX())) *
-                Math.sqrt(Math.pow(p.getX(), 2) + Math.pow(p.getY(), 2));
-        double y = Math.sin(theta - Math.atan(p.getY() / p.getX())) *
-                Math.sqrt(Math.pow(p.getX(), 2) + Math.pow(p.getY(), 2));
-        return new Point((int) x, (int) y);
+    public boolean collides(DisplayObject collidable) {
+        if (collidable instanceof DisplayObjectContainer) {
+            for (DisplayObject child : ((DisplayObjectContainer) collidable).getChildren()) {
+                if (this.collides(child)) {
+                    return true;
+                }
+            }
+        }
+        return this.getHitbox().intersects(collidable.getHitbox());
     }
 
-    public double getTweenableParam(TweenableParams param) {
+    public void registerCollidable(DisplayObject collidable) {
+        if (!collidables.contains(collidable)) {
+            collidables.add(collidable);
+        }
+    }
+
+    public boolean removeCollidable(DisplayObject collidable) {
+        return collidables.remove(collidable);
+    }
+
+    double getTweenableParam(TweenableParams param) {
         switch (param) {
             case X:
                 return getPosition().getX();
@@ -359,6 +394,8 @@ public class DisplayObject extends EventDispatcher {
                 return getRotation();
             case ALPHA:
                 return getAlpha();
+            case NA:
+                break;
         }
         return 0;
     }

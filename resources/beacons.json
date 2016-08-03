@@ -1,0 +1,42 @@
+[{
+	"filename": "beacon_main-1.png",
+	"frame": {"x":0,"y":0,"w":50,"h":50},
+	"flipped": true,
+	"default": false
+},
+{
+	"filename": "beacon_main-2.png",
+	"frame": {"x":50,"y":0,"w":50,"h":50},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "beacon_main-3.png",
+	"frame": {"x":100,"y":0,"w":50,"h":50},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "beacon_main-4.png",
+	"frame": {"x":150,"y":0,"w":50,"h":50},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "beacon_main-5.png",
+	"frame": {"x":200,"y":0,"w":50,"h":50},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "beacon_main-6.png",
+	"frame": {"x":250,"y":0,"w":50,"h":50},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "beacon_main-7.png",
+	"frame": {"x":300,"y":0,"w":50,"h":50},
+	"flipped": false,
+	"default": false
+}]

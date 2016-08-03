@@ -1,9 +1,10 @@
 package edu.virginia.game.test;
 
 import edu.virginia.engine.display.*;
-import edu.virginia.engine.events.*;
 import edu.virginia.engine.events.Event;
+import edu.virginia.engine.events.IEventListener;
 import edu.virginia.engine.util.GameClock;
+import edu.virginia.engine.util.Ticker;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -26,8 +27,8 @@ public class Echo extends DisplayObjectContainer implements IEventListener {
     ArrayList<Sprite> rings;
     BufferedImage ringImage;
 
-    GameClock timer;
     boolean firstRun;
+    Ticker ticker;
 
     public Echo(String id, int numRings, double radius, double duration, double spawnDelay, TweenTransitions.Functions easeFunction) {
         super(id);
@@ -48,10 +49,8 @@ public class Echo extends DisplayObjectContainer implements IEventListener {
             rings.add(ring);
         }
 
-        timer = new GameClock();
         firstRun = true;
-
-        timer.resetGameClock();
+        ticker = GameClock.getInstance().getTicker(this);
     }
 
     public void echo(int x, int y) {
@@ -69,18 +68,23 @@ public class Echo extends DisplayObjectContainer implements IEventListener {
             animation.animate(TweenableParams.ALPHA, easeFunction, 0, duration);
             TweenJuggler.getInstance().add(animation);
         }
-        timer.resetGameClock();
     }
 
     public boolean echoReady() {
-        return firstRun || (timer != null && timer.getElapsedTime() > (numRings - 1) * spawnDelay + duration);
+        if (firstRun || (ticker.getElapsedTime() > (numRings - 1) * spawnDelay + duration)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void handleEvent(Event event) {
         if (event.getEventType().equals(ECHO_EVENT) && this.echoReady()) {
             EchoEvent ev = (EchoEvent) event;
-            this.echo(ev.getX(), ev.getY());
+            if (ev.getEcho().equals(this.getId())) {
+                this.echo(ev.getX(), ev.getY());
+                ticker.resetTicker();
+            }
         }
     }
 }

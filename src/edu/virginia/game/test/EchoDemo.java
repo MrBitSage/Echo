@@ -20,18 +20,16 @@ public class EchoDemo extends Game implements IEventListener{
 
     AnimatedSprite sprite;
 
-    Sprite coin;
-
-    GameClock tic;
-
     TweenJuggler juggler = TweenJuggler.getInstance();
 
     Echo testEcho;
 
+    GameClock clock = GameClock.getInstance();
+
     public EchoDemo(String gameId, int width, int height) throws FileNotFoundException {
         super(gameId, width, height);
 
-        background = new DisplayObjectContainer("BackGround");
+        background = new DisplayObjectContainer("BackGround", "background.png");
         echoes = new DisplayObjectContainer("Echoes");
         level = new DisplayObjectContainer("Level");
 
@@ -46,22 +44,16 @@ public class EchoDemo extends Game implements IEventListener{
         sprite.addEventListener(this, CollisionEvent.COLLISION_EVENT);
         this.addChild(sprite);
 
-        coin = new Sprite("Coin", "coin.png");
-        level.addChild(coin);
-
         testEcho = new Echo("Echo", 3, 250, 6000, 1000, TweenTransitions.Functions.MUSTAFA);
         this.addEventListener(testEcho, Echo.ECHO_EVENT);
         echoes.addChild(testEcho);
-
-        tic = new GameClock();
-        tic.resetGameClock();
     }
 
     @Override
     protected void update(ArrayList<String> pressedKeys) {
-        super.update(pressedKeys);
-        if (sprite != null && tic != null) {
-            double dT = tic.getElapsedTime() / 1000;
+        clock.refresh();
+        if (sprite != null) {
+            double dT = GameClock.getInstance().getDeltaT() / 1000;
             double dist = 500 * dT;
             if (pressedKeys.contains("A") ^ pressedKeys.contains("D")) {
                 if (pressedKeys.contains("A")) {
@@ -76,14 +68,14 @@ public class EchoDemo extends Game implements IEventListener{
                 sprite.animate("default");
             }
             if (Math.abs(sprite.getPosition().getX() - 400) < 20 && testEcho.echoReady()) {
-                this.dispatchEvent(new EchoEvent(Echo.ECHO_EVENT, this, 500, 300));
+                this.dispatchEvent(new EchoEvent(Echo.ECHO_EVENT, this, 500, 300, "Echo"));
             }
-            sprite.collidesWith(echoes);
-            tic.resetGameClock();
         }
         if (juggler != null) {
             juggler.update();
         }
+        super.update(pressedKeys);
+        GameClock.getInstance().clockTic();
     }
 
     public static void main(String[] args) throws FileNotFoundException {

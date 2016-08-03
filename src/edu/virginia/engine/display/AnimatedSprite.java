@@ -25,15 +25,13 @@ public class AnimatedSprite extends Sprite {
     private Animation animation;
     private BufferedImage defaultImage;
     private double fps;
-
-    private GameClock dT;
+    private double currentFrameDuration;
 
     public AnimatedSprite(String id, String fileName, double fps) throws FileNotFoundException {
         super(id);
         loadAnimations(fileName);
         this.fps = fps;
-
-        dT = new GameClock();
+        currentFrameDuration = 0;
     }
 
     private void loadAnimations(String fileName) throws FileNotFoundException {
@@ -110,14 +108,16 @@ public class AnimatedSprite extends Sprite {
     @Override
     public void update(ArrayList<String> pressedKeys) {
         super.update(pressedKeys);
-        if (dT != null && dT.getElapsedTime() > 1000 / fps) {
+        if (currentFrameDuration > 1000 / fps) {
             BufferedImage nextFrame = animation.nextFrame();
             if (nextFrame == null) {
                 this.setImage(defaultImage);
             } else {
                 this.setImage(nextFrame);
             }
-            dT.resetGameClock();
+            currentFrameDuration = 0;
+        } else {
+            currentFrameDuration += GameClock.getInstance().getDeltaT();
         }
     }
 

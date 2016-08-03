@@ -1,5 +1,8 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.util.GameClock;
+import edu.virginia.engine.util.Ticker;
+
 import java.awt.*;
 
 /**
@@ -13,6 +16,7 @@ public class TweenParam {
     private double endVal;
     private double time;
     private long startTime;
+    private Ticker ticker;
 
     public TweenParam(TweenableParams paramToTween, TweenTransitions.Functions tweenTransition, double startVal, double endVal, double time) {
         this.paramToTween = paramToTween;
@@ -24,17 +28,15 @@ public class TweenParam {
     }
 
     public void update(DisplayObject object) {
-        long t = System.currentTimeMillis();
+        if (ticker == null) ticker = GameClock.getInstance().getTicker(this);
 
-        if (this.startTime == -1) {
-            this.startTime = t;
-        }
+        double percentTimeElapsed = ticker.getElapsedTime()/time;
 
-        double percentDone = TweenTransitions.applyTransition((t - startTime) / time, tweenTransition);
+        double percentDone = TweenTransitions.applyTransition(percentTimeElapsed, tweenTransition);
 
         double deltaVal = endVal - startVal;
 
-        if (percentDone < 1) {
+        if (percentTimeElapsed < 1) {
             deltaVal *= percentDone;
         }
 
@@ -63,9 +65,7 @@ public class TweenParam {
     }
 
     public boolean isComplete() {
-        if (this.startTime != -1 && System.currentTimeMillis() - this.time > this.startTime) {
-            return true;
-        }
+        if (ticker != null) return ticker.getElapsedTime() > time;
         return false;
     }
 

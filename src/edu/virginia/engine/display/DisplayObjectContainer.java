@@ -1,5 +1,7 @@
 package edu.virginia.engine.display;
 
+import edu.virginia.engine.events.CollisionEvent;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -28,10 +30,10 @@ public class DisplayObjectContainer extends DisplayObject {
 
     @Override
     protected void update(ArrayList<String> pressedKeys) {
-        super.update(pressedKeys);
         for (DisplayObject child : children) {
             child.update(pressedKeys);
         }
+        super.update(pressedKeys);
     }
 
     @Override
@@ -74,6 +76,10 @@ public class DisplayObjectContainer extends DisplayObject {
         }
     }
 
+    public void addChildren(ArrayList<DisplayObject> children) {
+        this.children.addAll(children);
+    }
+
     public boolean removeChild(DisplayObject child) {
         child.setParent(null);
         return children.remove(child);
@@ -109,14 +115,18 @@ public class DisplayObjectContainer extends DisplayObject {
     }
 
     @Override
-    public boolean collidesWith(DisplayObject object) {
-        if (!super.collidesWith(object)) {
+    public boolean checkCollisions() {
+        boolean collided = false;
+        if (!super.checkCollisions()) {
             for (DisplayObject child : children) {
-                if (child.collidesWith(object)) {
-                    return true;
+                for (DisplayObject collidable : collidables) {
+                    if (child.collides(collidable)) {
+                        this.dispatchEvent(new CollisionEvent(CollisionEvent.COLLISION_EVENT, (PhysicsSprite) this, collidable));
+                        collided = true;
+                    }
                 }
             }
-            return false;
+            return collided;
         }
         return true;
     }

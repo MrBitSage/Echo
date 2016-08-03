@@ -17,8 +17,6 @@ public class PhysicsSprite extends AnimatedSprite {
     private double xSpeedCap;
     private double ySpeedCap;
 
-    private GameClock dT;
-
     public PhysicsSprite(String id, String fileName, double fps) throws FileNotFoundException {
         super(id, fileName, fps);
         init();
@@ -32,28 +30,22 @@ public class PhysicsSprite extends AnimatedSprite {
         yAccel = 0;
         xSpeedCap = 100;
         ySpeedCap = 100;
-
-        dT = new GameClock();
     }
 
     @Override
     public void update(ArrayList<String> pressedKeys) {
+        double delta = GameClock.getInstance().getDeltaT() / 1000;
+        move(delta * xVel, delta * yVel);
+
+        xVel += xAccel;
+        yVel += yAccel;
+
+        if (xVel > xSpeedCap) xVel = xSpeedCap;
+        if (xVel < -xSpeedCap) xVel = -xSpeedCap;
+        if (yVel > ySpeedCap) yVel = ySpeedCap;
+        if (yVel < -ySpeedCap) yVel = -ySpeedCap;
+
         super.update(pressedKeys);
-        if (dT != null) {
-            double delta = dT.getElapsedTime() / 1000;
-
-            this.getPosition().translate((int) (delta * xVel), (int) (delta * yVel));
-
-            xVel += xAccel;
-            yVel += yAccel;
-
-            if (xVel > xSpeedCap) xVel = xSpeedCap;
-            if (xVel < -xSpeedCap) xVel = -xSpeedCap;
-            if (yVel > ySpeedCap) yVel = ySpeedCap;
-            if (yVel < -ySpeedCap) yVel = -ySpeedCap;
-
-            dT.resetGameClock();
-        }
     }
 
     public double getxVel() {

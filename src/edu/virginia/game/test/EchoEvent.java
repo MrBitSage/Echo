@@ -10,11 +10,13 @@ public class EchoEvent extends Event {
 
     private int x;
     private int y;
+    private String echo;
 
-    public EchoEvent(String eventType, IEventDispatcher source, int x, int y) {
+    public EchoEvent(String eventType, IEventDispatcher source, int x, int y, String echo) {
         super(eventType, source);
         this.x = x;
         this.y = y;
+        this.echo = echo;
     }
 
     public int getX() {
@@ -23,5 +25,9 @@ public class EchoEvent extends Event {
 
     public int getY() {
         return y;
+    }
+
+    public String getEcho() {
+        return echo;
     }
 }

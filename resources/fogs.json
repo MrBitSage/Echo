@@ -1,0 +1,131 @@
+[{
+	"filename": "fog_main-0.png",
+	"frame": {"x":0,"y":0,"w":800,"h":600},
+	"flipped": false,
+	"default": true
+},
+{
+	"filename": "fog_main-1.png",
+	"frame": {"x":800,"y":0,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-2.png",
+	"frame": {"x":0,"y":600,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-3.png",
+	"frame": {"x":800,"y":600,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-4.png",
+	"frame": {"x":0,"y":1200,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-5.png",
+	"frame": {"x":800,"y":1200,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-6.png",
+	"frame": {"x":0,"y":1800,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-7.png",
+	"frame": {"x":800,"y":1800,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-8.png",
+	"frame": {"x":0,"y":2400,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-9.png",
+	"frame": {"x":800,"y":2400,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-10.png",
+	"frame": {"x":0,"y":3000,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-11.png",
+	"frame": {"x":800,"y":3000,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-12.png",
+	"frame": {"x":0,"y":3600,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-13.png",
+	"frame": {"x":800,"y":3600,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-14.png",
+	"frame": {"x":0,"y":4200,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-15.png",
+	"frame": {"x":800,"y":4200,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-16.png",
+	"frame": {"x":0,"y":4800,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-17.png",
+	"frame": {"x":800,"y":4800,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-18.png",
+	"frame": {"x":0,"y":5400,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-19.png",
+	"frame": {"x":800,"y":5400,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-20.png",
+	"frame": {"x":0,"y":6000,"w":800,"h":600},
+	"flipped": false,
+	"default": false
+},
+{
+	"filename": "fog_main-21.png",
+	"frame": {"x":800,"y":6000,"w":800,"h":600},
+	"flipped": false,
+	"default": false }]

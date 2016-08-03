@@ -146,6 +146,18 @@ public class Game extends DisplayObjectContainer implements ActionListener, KeyL
         super.draw(g);
     }
 
+    protected void drawHitBox(Graphics g, DisplayObject object) {
+        if (object instanceof DisplayObjectContainer) {
+            for (DisplayObject child : ((DisplayObjectContainer) object).getChildren()) {
+                drawHitBox(g, child);
+            }
+        }
+        if (object.getDisplayImage() != null) {
+            Rectangle r = object.getHitbox();
+            g.drawRect(r.x, r.y, r.width, r.height);
+        }
+    }
+
     public JFrame getMainFrame() {
         return this.mainFrame;
     }
