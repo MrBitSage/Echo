@@ -18,53 +18,40 @@ public class CollisionResolver implements IEventListener {
             CollisionEvent ev = (CollisionEvent) event;
             DisplayObject sprite = (DisplayObject) ev.getSource();
             DisplayObject collidable = ev.getCollidedObject();
-
             Rectangle player = sprite.getHitbox();
-            Rectangle playerOld = sprite.getHitbox();
-            playerOld.translate(sprite.getPreviousPosition().x - sprite.getPosition().x, sprite.getPreviousPosition().y - sprite.getPosition().y);
-
-            Rectangle object = collidable.getHitbox();
-
-            Rectangle intersection = player.intersection(object);
+            Rectangle intersection = player.intersection(collidable.getHitbox());
 
             double deltaX = 0, deltaY = 0;
-            if (collidedFromTop(playerOld, player, object)) {
-                System.out.println("Top");
-                deltaY = -(intersection.getHeight());
-            }
-            if (collidedFromBottom(playerOld, player, object)) {
-                System.out.println("Bottom");
-                deltaY = intersection.getHeight();
-            }
-            if (collidedFromLeft(playerOld, player, object)) {
-                System.out.println("Left");
-                deltaX = -(intersection.getWidth());
-            }
-            if (collidedFromRight(playerOld, player, object)) {
-                System.out.println("Right");
-                deltaX = intersection.getWidth();
-            }
-            sprite.move(deltaX, deltaY);
+
+            int belly = sprite.getHitbox().x+sprite.getHitbox().width;
+            int feet = sprite.getHitbox().y+sprite.getHitbox().height;
+            int back = sprite.getHitbox().x;
+            int head = sprite.getHitbox().y;
+
+            boolean collideBottom = feet >= collidable.getHitbox().y &&
+                    head < collidable.getHitbox().y;
+
+            boolean collideTop = head <= collidable.getHitbox().y+collidable.getHitbox().height &&
+                    feet > collidable.getHitbox().y+collidable.getHitbox().height;
+
+            boolean collideLeft = back <= collidable.getHitbox().x+collidable.getHitbox().width &&
+                    belly > collidable.getHitbox().x+collidable.getHitbox().width &&
+                    head > collidable.getHitbox().y;
+
+            boolean collideRight = belly >= collidable.getHitbox().x &&
+                    back < collidable.getHitbox().x;
+
+            if ( collideBottom )
+                deltaY = -intersection.height;
+            else if ( collideTop )
+                deltaY = intersection.height;
+            else if ( collideLeft  )
+                deltaX = intersection.width;
+            else if ( collideRight )
+                deltaX = -intersection.width;
+
+            sprite.move(deltaX,deltaY);
+
         }
-    }
-
-    private boolean collidedFromLeft(Rectangle old, Rectangle current, Rectangle object) {
-        return old.getX() + old.getWidth() <= object.getX() &&
-                current.getX() + current.getWidth() >= object.getX();
-    }
-
-    private boolean collidedFromRight(Rectangle old, Rectangle current, Rectangle object) {
-        return old.getX() >= object.getX() + object.getWidth() &&
-                current.getX() <= object.getX() + object.getWidth();
-    }
-
-    private boolean collidedFromTop(Rectangle old, Rectangle current, Rectangle object) {
-        return old.getY() + old.getHeight() <= object.getY() &&
-                current.getY() + current.getHeight() >= object.getY();
-    }
-
-    private boolean collidedFromBottom(Rectangle old, Rectangle current, Rectangle object) {
-        return old.getY() >= object.getY() + object.getHeight() &&
-                current.getY() <= object.getY() + object.getHeight();
     }
 }
