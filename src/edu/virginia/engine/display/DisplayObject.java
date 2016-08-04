@@ -15,15 +15,13 @@ import java.util.ArrayList;
  */
 public class DisplayObject extends EventDispatcher {
 
+    protected ArrayList<DisplayObject> collidables;
     //Parent
     private DisplayObject parent;
-
     /* All DisplayObject have a unique id */
     private String id;
-
     /* The image that is displayed by this object */
     private BufferedImage displayImage;
-
     private boolean visible;
     private boolean visibilityToggled;
     private Point previousPosition;
@@ -33,8 +31,6 @@ public class DisplayObject extends EventDispatcher {
     private double scaleY;
     private double rotation;
     private float alpha;
-
-    protected ArrayList<DisplayObject> collidables;
 
     /**
      * Constructors: can pass in the id OR the id and image's file path and
@@ -80,14 +76,13 @@ public class DisplayObject extends EventDispatcher {
         this.parent = parent;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * Returns the unscaled width and height of this display object
@@ -171,6 +166,14 @@ public class DisplayObject extends EventDispatcher {
         this.setPosition(new Point(position.x + x, position.y + y));
     }
 
+    public void moveTo(double x, double y) {
+        this.setPosition(new Point((int) x, (int) y));
+    }
+
+    public void moveTo(int x, int y) {
+        this.setPosition(new Point(x, y));
+    }
+
     public Point getPivotPoint() {
         return pivotPoint;
     }
@@ -191,6 +194,10 @@ public class DisplayObject extends EventDispatcher {
         return scaleY;
     }
 
+    public void setScaleY(double scaleY) {
+        this.scaleY = scaleY;
+    }
+
     public double getGlobalScaleX() {
         if (getParent() == null) {
             return this.scaleX;
@@ -207,10 +214,6 @@ public class DisplayObject extends EventDispatcher {
         }
     }
 
-    public void setScaleY(double scaleY) {
-        this.scaleY = scaleY;
-    }
-
     public double getRotation() {
         return rotation;
     }
@@ -221,6 +224,10 @@ public class DisplayObject extends EventDispatcher {
 
     public float getAlpha() {
         return alpha;
+    }
+
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
     }
 
     public float getAlphaTransform() {
@@ -241,10 +248,6 @@ public class DisplayObject extends EventDispatcher {
         } else {
             return 1;
         }
-    }
-
-    public void setAlpha(float alpha) {
-        this.alpha = alpha;
     }
 
     public Point getPreviousPosition() {
@@ -352,7 +355,7 @@ public class DisplayObject extends EventDispatcher {
         boolean collided = false;
         for (DisplayObject collidable : collidables) {
             if (collides(collidable)) {
-                this.dispatchEvent(new CollisionEvent(CollisionEvent.COLLISION_EVENT, (PhysicsSprite) this, collidable));
+                this.dispatchEvent(new CollisionEvent(CollisionEvent.COLLISION_EVENT, this, collidable));
                 collided = true;
             }
         }

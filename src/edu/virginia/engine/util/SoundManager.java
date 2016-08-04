@@ -14,7 +14,7 @@ public class SoundManager {
         this.id = id;
         String file = ("resources" + File.separator + filename);
         File file_location = new File(file);
-        input = AudioSystem.getAudioInputStream(file_location);;
+        input = AudioSystem.getAudioInputStream(file_location);
         AudioFormat format = input.getFormat();
         DataLine.Info data = new DataLine.Info(Clip.class, format);
         sound = (Clip) AudioSystem.getLine(data);
@@ -26,6 +26,7 @@ public class SoundManager {
     }
 
     public void playSoundEffect(String id) throws IOException {
+        sound.setMicrosecondPosition(0);
         sound.start();
         input.close();
     }
@@ -43,5 +44,9 @@ public class SoundManager {
 
     public void stopMusic(String id){
         sound.stop();
+    }
+
+    public boolean soundLoaded() {
+        return sound != null;
     }
 }

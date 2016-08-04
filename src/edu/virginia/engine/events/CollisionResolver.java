@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * Created by Jason.
  */
-public class CollisionResolver implements IEventListener {
+public class CollisionResolver extends EventDispatcher implements IEventListener {
 
     public CollisionResolver() {
     }
@@ -16,6 +16,16 @@ public class CollisionResolver implements IEventListener {
     public void handleEvent(Event event) {
         if (event.getEventType().equals(CollisionEvent.COLLISION_EVENT)) {
             CollisionEvent ev = (CollisionEvent) event;
+
+            if (ev.getCollidedObject().getId().equals("Border Right")) {
+                this.dispatchEvent(new Event("Level Complete", this));
+                return;
+            }
+            if (ev.getCollidedObject().getId().contains("crystal")) {
+                this.dispatchEvent(new Event("Player Died", this));
+                return;
+            }
+
             DisplayObject sprite = (DisplayObject) ev.getSource();
             DisplayObject collidable = ev.getCollidedObject();
             Rectangle player = sprite.getHitbox();
@@ -41,8 +51,10 @@ public class CollisionResolver implements IEventListener {
             boolean collideRight = belly >= collidable.getHitbox().x &&
                     back < collidable.getHitbox().x;
 
-            if ( collideBottom )
+            if (collideBottom) {
+                this.dispatchEvent(new Event("Standing", this));
                 deltaY = -intersection.height;
+            }
             else if ( collideTop )
                 deltaY = intersection.height;
             else if ( collideLeft  )

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class Echo extends DisplayObjectContainer implements IEventListener {
 
     public static final String ECHO_EVENT = "Echo";
+    public static final String ECHO_PING = "Echo Ping";
     private static final String FILE_NAME = "echo_default-1.png";
 
     int numRings;
@@ -71,10 +72,7 @@ public class Echo extends DisplayObjectContainer implements IEventListener {
     }
 
     public boolean echoReady() {
-        if (firstRun || (ticker.getElapsedTime() > (numRings - 1) * spawnDelay + duration)) {
-            return true;
-        }
-        return false;
+        return firstRun || (ticker.getElapsedTime() > (numRings - 1) * spawnDelay + duration);
     }
 
     @Override
@@ -83,6 +81,7 @@ public class Echo extends DisplayObjectContainer implements IEventListener {
             EchoEvent ev = (EchoEvent) event;
             if (ev.getEcho().equals(this.getId())) {
                 this.echo(ev.getX(), ev.getY());
+                this.dispatchEvent(new Event(ECHO_PING, this));
                 ticker.resetTicker();
             }
         }
